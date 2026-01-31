@@ -1,5 +1,6 @@
 <?php
 
+<html>
 <!-- INDEX FILE -->
 
 <!-- Testing Device Media files ---> 
@@ -8,3 +9,4 @@
 
 <!-- Testing for IP Address if Banned for using this CRM. -->
 
+</html>
