@@ -1,25 +1,68 @@
 <?php
 session_start();
 
-$timeout = 1800; // 30 minutes in seconds
+/*
+|--------------------------------------------------------------------------
+| CONFIG
+|--------------------------------------------------------------------------
+*/
+$timeout = 1800; // 30 minutes
+$bannedIPs = [
+    // '123.123.123.123',
+];
 
+/*
+|--------------------------------------------------------------------------
+| SESSION TIMEOUT CHECK
+|--------------------------------------------------------------------------
+*/
 if (isset($_SESSION['session_time']) && (time() - $_SESSION['session_time']) > $timeout) {
     session_unset();
     session_destroy();
-    header("Location: index.php");
+    header("Location: login/login.php");
     exit();
 }
 
-// Update session time on activity
 $_SESSION['session_time'] = time();
 
-<DOCTYPE html>
-<!-- INDEX FILE -->
+/*
+|--------------------------------------------------------------------------
+| IP BAN CHECK
+|--------------------------------------------------------------------------
+*/
+$userIP = $_SERVER['REMOTE_ADDR'];
 
-<!-- Testing Device Media files ---> 
+if (in_array($userIP, $bannedIPs)) {
+    http_response_code(403);
+    exit('Access denied.');
+}
 
-<!-- Testing For VPN | If VPN TRUE Divert to Take OFF VPN. --> 
+/*
+|--------------------------------------------------------------------------
+| DEVICE / MEDIA CHECK (BASIC)
+|--------------------------------------------------------------------------
+*/
+$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
 
-<!-- Testing for IP Address if Banned for using this CRM. -->
+/*
+|--------------------------------------------------------------------------
+| VPN CHECK (PLACEHOLDER)
+|--------------------------------------------------------------------------
+| Later you can:
+| - Use an API (ipinfo, iphub, vpnapi)
+| - Compare ASN / proxy headers
+*/
+$isVPN = false; // default assumption
 
-</html>
+if ($isVPN === true) {
+    header("Location: vpn-warning.php");
+    exit();
+}
+
+/*
+|--------------------------------------------------------------------------
+| REDIRECT TO LOGIN
+|--------------------------------------------------------------------------
+*/
+header("Location: login/login.php");
+exit();
